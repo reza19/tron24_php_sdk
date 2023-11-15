@@ -103,6 +103,12 @@ class Tron24
     }
 
 
+    public function totalBalance()
+    {
+        return $this->send('total-balance');
+    }
+
+
     /**
      * @param $api
      * @param array $data
