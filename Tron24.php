@@ -90,16 +90,17 @@ class Tron24
      * @param int $address_id
      * @param string $to_address
      * @param $amount
+     * @param $X_Unique_Request_ID (optional)
      * @return mixed
      */
-    public function withdraw(string $coin , int $address_id , string $to_address , $amount)
+    public function withdraw(string $coin , int $address_id , string $to_address , $amount,$X_Unique_Request_ID=null)
     {
         return $this->send('withdraw', [
             'coin'=>$coin ,
             'address_id' =>$address_id ,
             'to_address'=>$to_address ,
             'amount'=>$amount
-        ]);
+        ],$X_Unique_Request_ID);
     }
 
 
@@ -114,13 +115,14 @@ class Tron24
      * @param array $data
      * @return mixed
      */
-    private function send($api, $data = [])
+    private function send($api, $data = [],$X_Unique_Request_ID=null)
     {
         $post_encode = http_build_query($data);
         $api_sign = base64_encode(hash_hmac('sha256', $post_encode, $this->secret_key, true));
         $headers = [
             'api_key' => $this->api_key,
-            'api_sign' => $api_sign
+            'api_sign' => $api_sign ,
+            'X-Unique-Request-ID'=>$X_Unique_Request_ID
         ];
         $result = $this->requestPost($this->base_api . $api, $data, $headers, 20);
         return json_decode($result, true);
